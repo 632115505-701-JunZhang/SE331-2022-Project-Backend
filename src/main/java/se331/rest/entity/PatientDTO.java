@@ -1,14 +1,31 @@
 package se331.rest.entity;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import se331.lab.rest.entity.Doctor;
-import se331.lab.rest.entity.Patients;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import se331.rest.security.entity.UserDTO;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.util.List;
 
-public interface PatientRepository extends JpaRepository<Patients,Long> {
-    List<Patients> findAll();
-    Page<Patients> findByNameIgnoreCaseContaining(String title, Pageable page);
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class PatientDTO {
+    Long id;
+    String name;
+    String surname;
+    String status;
+    Integer age;
+    String hometown;
+    String doctor_comm;
+    PatientDoctorDTO doctor;
+    List<PatientVaccineDTO> vaccine;
+    UserDTO user;
+    List<String> imageUrls;
+
 }
