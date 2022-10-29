@@ -1,14 +1,30 @@
 package se331.rest.dao;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+import se331.lab.rest.entity.Doctor;
+import se331.lab.rest.repository.DoctorRepository;
+
 
 import java.util.Optional;
 
 @Repository
 @Profile("db")
+public class DoctorDaoDbImpl implements DoctorDao {
+
 public class DoctorDaoDbImpl implements DoctorDao{
+
+
     @Autowired
     DoctorRepository doctorRepository;
 
