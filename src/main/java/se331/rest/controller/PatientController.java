@@ -20,6 +20,9 @@ import se331.lab.rest.repository.VaccineRepository;
 import se331.lab.rest.service.DoctorService;
 import se331.lab.rest.service.PatientService;
 import se331.lab.rest.util.LabMapper;
+import se331.rest.dao.DoctorDao;
+import se331.rest.dao.PatientDao;
+import se331.rest.service.DoctorService;
 
 @Controller
 public class PatientController {

@@ -1,5 +1,10 @@
 package se331.rest.entity;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.Id;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

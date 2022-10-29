@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import se331.rest.entity.*;
 
 @Mapper(imports = Collectors.class)
 public interface LabMapper {
