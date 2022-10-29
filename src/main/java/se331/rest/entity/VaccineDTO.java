@@ -1,4 +1,4 @@
-package se331.lab.rest.entity;
+package se331.rest.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.ManyToOne;
-import java.util.List;
 
 @Data
 @Builder

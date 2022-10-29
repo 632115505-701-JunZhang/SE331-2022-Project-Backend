@@ -1,4 +1,4 @@
-package se331.lab.rest.controller;
+package se331.rest.controller;
 
 public class BucketController {
 }

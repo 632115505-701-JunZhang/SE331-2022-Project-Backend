@@ -1,4 +1,4 @@
-package se331.lab.rest.controller;
+package se331.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,8 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 import se331.lab.rest.dao.PatientDao;
 import se331.lab.rest.entity.Doctor;
 import se331.lab.rest.entity.Patients;
-import se331.lab.rest.entity.Vaccine;
-import se331.lab.rest.service.VaccineService;
+import se331.rest.entity.Vaccine;
+import se331.rest.service.VaccineService;
 import se331.lab.rest.util.LabMapper;
 
 @Controller
