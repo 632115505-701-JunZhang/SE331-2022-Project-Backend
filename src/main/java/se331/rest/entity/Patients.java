@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import se331.rest.entity.Doctor;
+import se331.rest.security.entity.User;
 
 @Data
 @Builder

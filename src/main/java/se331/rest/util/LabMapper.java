@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import se331.rest.entity.*;
+import se331.rest.security.entity.User;
 
 @Mapper(imports = Collectors.class)
 public interface LabMapper {

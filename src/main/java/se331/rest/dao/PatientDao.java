@@ -3,8 +3,8 @@ package se331.rest.dao;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import se331.lab.rest.entity.Patients;
-import se331.lab.rest.entity.Vaccine;
+import se331.rest.entity.Patients;
+import se331.rest.entity.Vaccine;
 
 import java.util.Optional;
 

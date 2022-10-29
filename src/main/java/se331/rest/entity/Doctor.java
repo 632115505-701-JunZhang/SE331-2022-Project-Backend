@@ -3,6 +3,7 @@ package se331.rest.entity;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
+import se331.rest.security.entity.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;

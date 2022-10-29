@@ -10,19 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import se331.lab.rest.dao.DoctorDao;
-import se331.lab.rest.dao.PatientDao;
-import se331.lab.rest.dao.VaccineDao;
-import se331.lab.rest.entity.Doctor;
-import se331.lab.rest.entity.Patients;
-import se331.lab.rest.entity.Vaccine;
-import se331.lab.rest.repository.VaccineRepository;
-import se331.lab.rest.service.DoctorService;
-import se331.lab.rest.service.PatientService;
-import se331.lab.rest.util.LabMapper;
 import se331.rest.dao.DoctorDao;
 import se331.rest.dao.PatientDao;
+import se331.rest.entity.Doctor;
+import se331.rest.entity.Patients;
+import se331.rest.entity.Vaccine;
+import se331.rest.repository.VaccineRepository;
 import se331.rest.service.DoctorService;
+import se331.rest.service.PatientService;
+import se331.rest.util.LabMapper;
+
 
 @Controller
 public class PatientController {

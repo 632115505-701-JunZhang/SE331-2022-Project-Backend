@@ -2,8 +2,6 @@ package se331.rest.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import se331.lab.rest.entity.Doctor;
-import se331.lab.rest.entity.Patients;
 import se331.rest.entity.Vaccine;
 
 public interface VaccineService {

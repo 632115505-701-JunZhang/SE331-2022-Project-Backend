@@ -1,7 +1,12 @@
 package se331.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import se331.rest.dao.DoctorDao;
+import se331.rest.dao.PatientDao;
+import se331.rest.entity.Doctor;
 
 @Service
 public class DoctorServiceImpl implements DoctorService {

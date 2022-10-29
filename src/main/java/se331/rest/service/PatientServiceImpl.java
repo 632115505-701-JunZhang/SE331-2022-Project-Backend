@@ -10,11 +10,7 @@ import se331.rest.dao.UserDao;
 import se331.rest.dao.VaccineDao;
 import se331.rest.entity.Doctor;
 import se331.rest.entity.Patients;
-import se331.rest.entity.Vaccine;
-import se331.rest.security.entity.Authority;
 import se331.rest.security.entity.User;
-
-import javax.print.Doc;
 import java.util.List;
 
 @Service
