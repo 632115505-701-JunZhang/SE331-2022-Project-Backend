@@ -6,13 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import se331.lab.rest.entity.Patients;
 import se331.rest.entity.Vaccine;
-import se331.lab.rest.repository.VaccineRepository;
+import se331.rest.repository.VaccineRepository;
 
 @Repository
 @Profile("db")
 public class VaccineDaoDbImpl implements VaccineDao {
+
     @Autowired
     VaccineRepository vaccineRepository;
 
@@ -40,5 +40,4 @@ public class VaccineDaoDbImpl implements VaccineDao {
     public Page<Vaccine> getVaccine(String title, Pageable page) {
         return vaccineRepository.findByNameIgnoreCaseContaining(title,page);
     }
-
 }

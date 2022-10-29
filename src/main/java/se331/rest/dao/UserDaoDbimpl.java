@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import se331.lab.rest.security.entity.User;
-import se331.lab.rest.security.repository.UserRepository;
+import se331.rest.security.entity.User;
+import se331.rest.security.repository.UserRepository;
 
 @Repository
 public class UserDaoDbimpl implements UserDao {

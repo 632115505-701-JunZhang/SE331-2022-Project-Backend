@@ -1,7 +1,6 @@
 package se331.rest.entity;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import se331.rest.security.entity.User;
 
@@ -9,7 +8,13 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@Builder
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Doctor {
+    @javax.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
@@ -24,4 +29,12 @@ public class Doctor {
     List<String> docImageUrl;
     @OneToOne
     User user;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }

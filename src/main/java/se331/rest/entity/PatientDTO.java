@@ -5,10 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import se331.rest.security.entity.UserDTO;
-
-import javax.persistence.ElementCollection;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import java.util.List;
 
 @Data

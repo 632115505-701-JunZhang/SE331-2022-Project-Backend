@@ -6,8 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import se331.rest.entity.Patients;
 
-import se331.rest.entity.Doctor;
-import se331.rest.entity.Patients;
 
 import java.util.List;
 
