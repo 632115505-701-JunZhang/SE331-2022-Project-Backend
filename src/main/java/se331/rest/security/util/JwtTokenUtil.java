@@ -71,7 +71,7 @@ public class JwtTokenUtil implements Serializable {
         Claims claims;
         try {
             Key key = new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS512.getJcaName());
-            claims = Jwts.parserBuilder()
+            claims = Jwts.parser()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token)
