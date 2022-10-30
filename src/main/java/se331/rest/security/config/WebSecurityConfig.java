@@ -51,6 +51,9 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.GET,"/event").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/event").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/registerdoc").permitAll()
+                .antMatchers(HttpMethod.POST, "/registerpat").permitAll()
                 .anyRequest()
                 .authenticated();
         http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
