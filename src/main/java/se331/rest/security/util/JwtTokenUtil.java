@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mobile.device.Device;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import se331.rest.security.entity.JwtUser;
@@ -18,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @Component
 public class JwtTokenUtil implements Serializable {
 
@@ -25,6 +27,10 @@ public class JwtTokenUtil implements Serializable {
     static final String CLAIM_KEY_AUDIENCE = "audience";
     static final String CLAIM_KEY_CREATED = "created";
     private static final long serialVersionUID = -3301605591108950415L;
+    private static final String AUDIENCE_UNKNOWN = "unknown";
+    private static final String AUDIENCE_WEB = "web";
+    private static final String AUDIENCE_MOBILE = "mobile";
+    private static final String AUDIENCE_TABLET = "tablet";
 
     @Value("${jwt.secret}")
     private String secret;
@@ -65,22 +71,26 @@ public class JwtTokenUtil implements Serializable {
         return expiration;
     }
 
+    public String getAudienceFromToken(String token) {
+        String audience;
+        try {
+            final Claims claims = getClaimsFromToken(token);
+            audience = (String) claims.get(CLAIM_KEY_AUDIENCE);
+        } catch (Exception e) {
+            audience = null;
+        }
+        return audience;
+    }
+
 
 
     private Claims getClaimsFromToken(String token) {
         Claims claims;
         try {
-            Key key = new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS512.getJcaName());
             claims = Jwts.parser()
-                    .setSigningKey(key)
-                    .build()
+                    .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
-
-//            claims = Jwts.parser()
-//                    .setSigningKey(secret)
-//                    .parseClaimsJws(token)
-//                    .getBody();
         } catch (Exception e) {
             claims = null;
         }
@@ -100,10 +110,34 @@ public class JwtTokenUtil implements Serializable {
         return (lastPasswordReset != null && created.before(lastPasswordReset));
     }
 
+    private String generateAudience(Device device) {
+        String audience = AUDIENCE_UNKNOWN;
+        if (device.isNormal()) {
+            audience = AUDIENCE_WEB;
+        } else if (device.isTablet()) {
+            audience = AUDIENCE_TABLET;
+        } else if (device.isMobile()) {
+            audience = AUDIENCE_MOBILE;
+        }
+        return audience;
+    }
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
+        claims.put(CLAIM_KEY_CREATED, new Date());
+        return generateToken(claims);
+    }
+
+    private Boolean ignoreTokenExpiration(String token) {
+        String audience = getAudienceFromToken(token);
+        return (AUDIENCE_TABLET.equals(audience) || AUDIENCE_MOBILE.equals(audience));
+    }
+
+    public String generateToken(UserDetails userDetails, Device device) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
+        claims.put(CLAIM_KEY_AUDIENCE, generateAudience(device));
         claims.put(CLAIM_KEY_CREATED, new Date());
         return generateToken(claims);
     }
@@ -113,14 +147,14 @@ public class JwtTokenUtil implements Serializable {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
     public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
         final Date created = getCreatedDateFromToken(token);
         return !isCreatedBeforeLastPasswordReset(created, lastPasswordReset)
-                && (!isTokenExpired(token));
+                && (!isTokenExpired(token) || ignoreTokenExpiration(token)) ;
     }
 
     public String refreshToken(String token) {

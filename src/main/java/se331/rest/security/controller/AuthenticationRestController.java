@@ -12,11 +12,22 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import se331.rest.dao.DoctorDao;
+import se331.rest.entity.Doctor;
+import se331.rest.entity.Patients;
+import se331.rest.repository.DoctorRepository;
+import se331.rest.repository.PatientRepository;
+import se331.rest.security.entity.Authority;
+import se331.rest.security.entity.AuthorityName;
 import se331.rest.security.entity.JwtUser;
 import se331.rest.security.entity.User;
+import se331.rest.security.repository.AuthorityRepository;
 import se331.rest.security.repository.UserRepository;
 import se331.rest.security.util.JwtTokenUtil;
+import org.springframework.mobile.device.Device;
 import se331.rest.util.LabMapper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,9 +52,16 @@ public class AuthenticationRestController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    DoctorRepository doctorRepository;
+    @Autowired
+    AuthorityRepository authorityRepository;
+
+    @Autowired
+    PatientRepository patientRepository;
 
     @PostMapping("${jwt.route.authentication.path}")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
 
         // Perform the security
         final Authentication authentication = authenticationManager.authenticate(
@@ -56,9 +74,15 @@ public class AuthenticationRestController {
 
         // Reload password post-security so we can generate token
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails);
+        final String token = jwtTokenUtil.generateToken(userDetails, device);
         Map result = new HashMap();
-        result.put("token", token);
+        result.put("token", token); //this 2.2.1
+        User user = userRepository.findById(((JwtUser) userDetails).getId()).orElse(null);
+        if(user.getPatient() != null) {
+            result.put("user", LabMapper.INSTANCE.getPatientAuthDTO(user.getPatient()));
+        }else if(user.getDoctor() != null) {
+            result.put("user", LabMapper.INSTANCE.getDoctorAuthDTO(user.getDoctor()));
+        }
         return ResponseEntity.ok(result);
     }
 
@@ -75,6 +99,67 @@ public class AuthenticationRestController {
         } else {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    @PostMapping("/registerdoc")
+    public ResponseEntity<?> addDoc(@RequestBody User user) {
+        Doctor doc = doctorRepository.save(Doctor.builder()
+                .name(user.getFirstname())
+                .surname(user.getLastname())
+                .age(user.getAge())
+                .build());
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setEmail(user.getEmail());
+        user.setFirstname(user.getFirstname());
+        user.setLastname(user.getLastname());
+        user.setEnabled(true);
+        user.setDoctor(doc);
+        doc.setUser(user);
+        User output = userRepository.save(user);
+        return ResponseEntity.ok(LabMapper.INSTANCE.getUserDto(output));
+    }
+
+    @PostMapping("/registerpat")
+    public ResponseEntity<?> addPat(@RequestBody User user) {
+        Patients pat = patientRepository.save(Patients.builder()
+                .name(user.getFirstname())
+                .surname(user.getLastname())
+                .hometown(user.getHometown())
+                .age(user.getAge())
+                .build());
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setEmail(user.getEmail());
+        user.setFirstname(user.getFirstname());
+        user.setLastname(user.getLastname());
+        user.setEnabled(true);
+        user.setPatient(pat);
+        pat.setUser(user);
+        User output = userRepository.save(user);
+        return ResponseEntity.ok(LabMapper.INSTANCE.getUserDto(output));
+    }
+
+
+    @PostMapping("/roledoc")
+    public ResponseEntity<?> changeRoleDoc(@RequestParam(value = "role", required = false) String role,
+                                           @RequestParam(value = "id", required = false) Long id) {
+        Doctor doc = doctorRepository.findById(id).orElse(null);
+        AuthorityName name = AuthorityName.valueOf(role);
+        Authority auth = authorityRepository.findByName(name);
+        doc.getUser().getAuthorities().add(auth);
+        User output = userRepository.save(doc.getUser());
+        return ResponseEntity.ok(LabMapper.INSTANCE.getUserDto(output));
+    }
+    @PostMapping("/rolepat")
+    public ResponseEntity<?> changeRolePat(@RequestParam(value = "role", required = false) String role,
+                                           @RequestParam(value = "id", required = false) Long id) {
+        Patients pat = patientRepository.findById(id).orElse(null);
+        AuthorityName name = AuthorityName.valueOf(role);
+        Authority auth = authorityRepository.findByName(name);
+        pat.getUser().getAuthorities().add(auth);
+        User output = userRepository.save(pat.getUser());
+        return ResponseEntity.ok(LabMapper.INSTANCE.getUserDto(output));
     }
 
 
