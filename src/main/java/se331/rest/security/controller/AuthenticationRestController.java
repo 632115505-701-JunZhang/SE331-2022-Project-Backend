@@ -27,7 +27,7 @@ import se331.rest.security.entity.User;
 import se331.rest.security.repository.AuthorityRepository;
 import se331.rest.security.repository.UserRepository;
 import se331.rest.security.util.JwtTokenUtil;
-import org.springframework.mobile.device.Device;
+//import org.springframework.mobile.device.Device;
 import se331.rest.util.LabMapper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,7 +61,7 @@ public class AuthenticationRestController {
     PatientRepository patientRepository;
 
     @PostMapping("${jwt.route.authentication.path}")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
 
         // Perform the security
         final Authentication authentication = authenticationManager.authenticate(
@@ -74,7 +74,7 @@ public class AuthenticationRestController {
 
         // Reload password post-security so we can generate token
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails, device);
+        final String token = jwtTokenUtil.generateToken(userDetails);
         Map result = new HashMap();
         result.put("token", token); //this 2.2.1
         User user = userRepository.findById(((JwtUser) userDetails).getId()).orElse(null);
